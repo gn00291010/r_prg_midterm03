@@ -48,76 +48,79 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+---
+title: "midtermwork003"
+author: "林舜禾"
+date: "2017年2月10日"
+output: html_document
+---
 
-*必須*要更新教室電腦的 RStudio 版本。
-
-**必須**要更新教室電腦的 RStudio 版本。
-
-**必須**要更新教室電腦的 RStudio 版本。
-
-# 使用 ggplot2
-
-## 散佈圖
-
-## 直方圖
-
-## 長條圖
-
-- 圖形的種類：
-    - 散佈圖
-    - 直方圖
-    - 長條圖
-
-## 寫程式
-
-在段落中寫程式 `plot(cars)`。
-
-### 散佈圖
-
-```{r}
-library(ggplot2)
-ggplot(cars, aes(x = speed, y = dist)) +
-  geom_point()
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 載入 `plotly` 套件
-
-```{r message=FALSE}
+```{r  message=FALSE}
 library(plotly)
 ```
 
-## 顯示 `cars` 的前六個觀測值
-
-```{r results='hide'}
-head(cars)
+#散布圖
+```{r}
+library(ggplot2)
+ggplotly(
+  ggplot(cars, aes(x = speed, y = dist))+
+  geom_point() +  #散布圖
+  ggtitle("Car speed vs. braking distance") +
+  xlab("Speed") +
+  ylab("Dist") +
+  geom_smooth(method = "lm") 
+  )
 ```
 
-## 參考連結
+#線圖
+```{r}
+ggplotly(
+  ggplot(economics, aes(x = date, y = unemploy/pop)) + 
+  geom_line()
+  )
+```
 
-- [knitr](https://yihui.name/knitr/)
-- [RMarkdown](http://rmarkdown.rstudio.com/)
+#直方圖
+```{r}
+ggplotly(
+  ggplot(iris, aes(x = Sepal.Length)) +
+  geom_histogram(binwidth=0.6) + 
+  facet_wrap(~ Species)  #用每種各畫一個 加入 ncol = 1 垂直展開
+)
+```
 
-## 放一張圖片
+#盒鬚圖
+```{r}
+ggplotly(
+  ggplot(iris, aes(x = "", y = Sepal.Length)) +
+  geom_boxplot()+
+    xlab("Boxplot")
+)
+```
 
-![r superman](https://www.safaribooksonline.com/library/view/the-art-of/9781593273842/httpatomoreillycomsourcenostarchimages915868.png.jpg)
+#長條圖
+```{r}
+ggplotly(
+  ggplot(mtcars, aes(x = row.names(mtcars), y = hp)) +
+  geom_bar(stat = "identity") + #stat = "identity" 可以呈現數值 
+  coord_flip() #xy反轉
+)
+ggplotly(
+  ggplot(mpg, aes(x = class)) + 
+  geom_bar(aes(fill = drv)) #aes(fill = drv) 納入類別變數的顏色
+)
+ggplotly(
+  ggplot(mpg, aes(x = class)) +
+  geom_bar(aes(fill = drv), position = "dodge") #改成非累積圖
+)
 
-
-
-## 引用一段話
-
-> “My mama always said, ‘Life was like a box of chocolates. You never know what you’re gonna get.’” – Forrest Gump
-
-## 水平分隔線
-
----
-
-## 我最喜歡的樂團（表格）
-
-|樂團名|主唱|
-|------|----|
-|Beyond|黃家駒|
-|The Beatles|John Lennon|
-
-
-
-
+ggplotly(
+  ggplot(mpg, aes(x = class)) +
+  geom_bar(aes(fill = drv), position = "fill") + #改成比率圖
+  ylab("Percentage")
+)
+```
